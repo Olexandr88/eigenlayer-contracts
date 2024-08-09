@@ -4,6 +4,7 @@ pragma solidity ^0.8.12;
 import "../interfaces/IAVSDirectory.sol";
 import "../interfaces/IDelegationManager.sol";
 import "../interfaces/IStrategy.sol";
+import "../interfaces/IStakeRootCompendium.sol";
 import "../libraries/Merkle.sol";
 
 import "@risc0-ethereum/IRiscZeroVerifier.sol";
@@ -11,24 +12,10 @@ import "@openzeppelin-upgrades/contracts/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
 
 
-contract StakeRootCompendium is OwnableUpgradeable {
+
+contract StakeRootCompendium is IStakeRootCompendium, OwnableUpgradeable {
     using EnumerableMap for EnumerableMap.AddressToUintMap;
 
-    struct StrategyAndMultiplier {
-        IStrategy strategy;
-        uint96 multiplier;
-    }
-
-    struct StakeRootLeaf {
-        IAVSDirectory.OperatorSet operatorSet;
-        bytes32 operatorSetRoot;
-    }
-
-    event SnarkProofVerified(bytes journal, bytes seal);
-
-    event VerifierChanged(address oldVerifier, address newVerifier);
-
-    event ImageIdChanged(bytes32 oldImageId, bytes32 newImageId);
 
     /// @notice the maximum number of operators that can be in an operator set in the StakeTree
     uint32 public constant MAX_OPERATOR_SET_SIZE = 2048;
